@@ -55,7 +55,6 @@ export class AuthService {
 
     const user = this.decodeToken(token);
 
-    console.log('==> ', user);
     if (user) {
       this.userSignal.set(user);
     } else {
