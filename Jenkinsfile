@@ -10,10 +10,78 @@ pipeline {
     }
 
     stages {
-        stage('Init') {
-            agent any
-            steps {
-                echo 'Environment configured — stages come next'
+        stage('Build: Backend Services') {
+            parallel {
+                stage('discovery-server') {
+                    agent {
+                        docker {
+                            image "${BACKEND_BUILD_IMAGE}"
+                            args '-v maven-repo:/root/.m2'
+                        }
+                    }
+                    steps {
+                        checkout scm
+                        dir('discovery-server') {
+                            sh 'mvn -B -DskipTests clean package'
+                        }
+                    }
+                }
+                stage('user-service') {
+                    agent {
+                        docker {
+                            image "${BACKEND_BUILD_IMAGE}"
+                            args '-v maven-repo:/root/.m2'
+                        }
+                    }
+                    steps {
+                        checkout scm
+                        dir('user-service') {
+                            sh 'mvn -B -DskipTests clean package'
+                        }
+                    }
+                }
+                stage('product-service') {
+                    agent {
+                        docker {
+                            image "${BACKEND_BUILD_IMAGE}"
+                            args '-v maven-repo:/root/.m2'
+                        }
+                    }
+                    steps {
+                        checkout scm
+                        dir('product-service') {
+                            sh 'mvn -B -DskipTests clean package'
+                        }
+                    }
+                }
+                stage('media-service') {
+                    agent {
+                        docker {
+                            image "${BACKEND_BUILD_IMAGE}"
+                            args '-v maven-repo:/root/.m2'
+                        }
+                    }
+                    steps {
+                        checkout scm
+                        dir('media-service') {
+                            sh 'mvn -B -DskipTests clean package'
+                        }
+                    }
+                }
+                stage('api-gateway') {
+                    agent {
+                        docker {
+                            image "${BACKEND_BUILD_IMAGE}"
+                            args '-v maven-repo:/root/.m2'
+                        }
+                    }
+                    steps {
+                        checkout scm
+                        dir('api-gateway') {
+                            sh 'mvn -B -DskipTests clean package'
+                        }
+                    }
+                }
             }
         }
     }
