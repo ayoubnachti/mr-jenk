@@ -79,9 +79,7 @@ class ProductServiceTest {
     verifyNoInteractions(mediaServiceGateway);
   }
 
-  // --- updateProduct: ownership (the bug we just fixed — this is the important
-  // one) ---
-
+ 
   @Test
   void updateProduct_ownerMatches_savesAndReturnsUpdatedFields() {
     Product existing = Product.builder()
